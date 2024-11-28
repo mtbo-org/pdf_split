@@ -18,8 +18,8 @@
 
 
 */
-#include <PDFWriter/PDFWriter.h>
-#include <PDFWriter/PDFDocumentCopyingContext.h>
+#include <PDFWriter.h>
+#include <PDFDocumentCopyingContext.h>
 
 #include <iostream>
 
@@ -32,12 +32,16 @@ int main(int argc, char* argv[])
     EStatusCode status;
     PDFWriter pdfWriter;
     PDFDocumentCopyingContext* copyingContext = NULL;
+	
+	if (argc != 4) {
+		cout << "Usage: pdf_split <in.pdf> <out.pdf> <page>\n";
+		return -1;
+	}
 
     do
     {
         status = pdfWriter.StartPDF(
-            "out.pdf", ePDFVersion13, LogConfiguration(true, true,
-                "PDFCopyingContextTest.txt"));
+            argv[2], ePDFVersion13);
         if (status != PDFHummus::eSuccess)
         {
             cout << "failed to start PDF\n";
@@ -46,7 +50,7 @@ int main(int argc, char* argv[])
 
 
         copyingContext = pdfWriter.CreatePDFCopyingContext(
-            "1.pdf");
+            argv[1]);
         if (!copyingContext)
         {
             cout << "failed to initialize copying context from pdf_split\n";
@@ -54,10 +58,11 @@ int main(int argc, char* argv[])
             break;
         }
 
-        EStatusCodeAndObjectIDType result = copyingContext->AppendPDFPageFromPDF(0);
+		auto page = ::atoi(argv[3]);
+        EStatusCodeAndObjectIDType result = copyingContext->AppendPDFPageFromPDF(page);
         if (result.first != PDFHummus::eSuccess)
         {
-            cout << "failed to append page 0 from 1.pdf\n";
+            cout << "failed to append page " << page << " from 1.pdf\n";
             status = result.first;
             break;
         }
