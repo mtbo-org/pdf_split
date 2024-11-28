@@ -18,6 +18,6 @@ add_executable (pdf_split
     pdf_split.cpp
 )
 
-target_link_libraries(pdf_split PDFHummus::PDFWriter)
+target_link_libraries(pdf_split -static PDFHummus::PDFWriter)
 
 install(TARGETS pdf_split DESTINATION bin)
