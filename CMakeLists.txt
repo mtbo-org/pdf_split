@@ -18,6 +18,10 @@ add_executable (pdf_split
     pdf_split.cpp
 )
 
-target_link_libraries(pdf_split -static PDFHummus::PDFWriter)
+set(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+set(BUILD_SHARED_LIBS OFF)
+set(CMAKE_EXE_LINKER_FLAGS "-static")
+
+target_link_libraries(pdf_split PUBLIC "-static" PDFHummus::PDFWriter)
 
 install(TARGETS pdf_split DESTINATION bin)
